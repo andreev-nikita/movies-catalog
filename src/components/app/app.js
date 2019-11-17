@@ -2,7 +2,7 @@ import React from 'react';
 import SwapiService from '../../services/swapi-service';
 import PixabayService from '../../services/pixabay-service';
 import Search from '../search/search';
-import Catalog from '../catalog/catalog';
+import MoviesList from '../movies-list/movies-list';
 
 export default class App extends React.Component {
   state = {
@@ -23,10 +23,10 @@ export default class App extends React.Component {
     const { films } = this.state;
 
     return (
-      <div className="movie-catalog">
+      <div className="movies-catalog">
         <h1>Каталог фильмов</h1>
         <Search />
-        <Catalog films={films} />
+        <MoviesList films={films} />
       </div>
     );
   }

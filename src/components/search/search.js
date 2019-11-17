@@ -4,7 +4,7 @@ export default () => {
   return (
     <input
       type="text"
-      className="movie-catalog__search"
+      className="movies-catalog__search"
       placeholder="Введите название"
     />
   );
