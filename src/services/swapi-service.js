@@ -1,17 +1,10 @@
-export default class SwapiService {
-  host = 'https://swapi.co/api/';
+import BaseService from './base-service';
 
-  async getResource(url) {
-    const fullUrl = `${this.host}${url}`;
-    const response = await fetch(fullUrl);
-
-    if (!response.ok) {
-      throw new Error(
-        `Could not get data from ${fullUrl}, response status ${response.status}`
-      );
-    }
-
-    return response.json();
+export default class SwapiService extends BaseService {
+  constructor() {
+    super({
+      host: 'https://swapi.co/api/',
+    });
   }
 
   async getFilm(id) {
