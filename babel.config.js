@@ -10,4 +10,6 @@ const presets = [
   '@babel/react',
 ];
 
-module.exports = { presets };
+const plugins = ['@babel/proposal-class-properties'];
+
+module.exports = { presets, plugins };
