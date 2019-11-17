@@ -1,0 +1,50 @@
+{
+  "name": "movie-catalog",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "start": "webpack-dev-server --open",
+    "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nikita Andreev <nikitaandreevcb@gmail.com>",
+  "license": "ISC",
+  "browserslist": [
+    "last 4 chrome versions",
+    "last 4 firefox versions",
+    "last 4 safari versions",
+    "last 1 edge version",
+    "last 1 ie version"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.7.0",
+    "@babel/core": "^7.7.2",
+    "@babel/preset-env": "^7.7.1",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
+    "eslint": "^6.6.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "6.6.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "3.1.1",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "file-loader": "^4.2.0",
+    "node-sass": "^4.13.0",
+    "prettier": "1.19.1",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.7.0",
+    "@babel/preset-react": "^7.7.0",
+    "core-js": "^3.4.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  }
+}
