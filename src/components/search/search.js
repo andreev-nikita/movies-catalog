@@ -1,11 +1,8 @@
 import React from 'react';
+import './search.scss';
 
 export default () => {
   return (
-    <input
-      type="text"
-      className="movies-catalog__search"
-      placeholder="Введите название"
-    />
+    <input type="text" className="search" placeholder="Введите название" />
   );
 };

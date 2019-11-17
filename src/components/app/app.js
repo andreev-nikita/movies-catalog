@@ -4,6 +4,8 @@ import PixabayService from '../../services/pixabay-service';
 import Search from '../search/search';
 import MoviesList from '../movies-list/movies-list';
 
+import './app.scss';
+
 export default class App extends React.Component {
   state = {
     films: null,

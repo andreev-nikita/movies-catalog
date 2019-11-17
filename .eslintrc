@@ -20,6 +20,7 @@
   "rules": {
     "prettier/prettier": "error",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "react/state-in-constructor": [1, "never"]
+    "react/state-in-constructor": [1, "never"],
+    "react/prop-types": [0]
   }
 }

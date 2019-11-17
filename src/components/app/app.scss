@@ -1,0 +1,15 @@
+.movies-catalog {
+  margin: 22px 31px 0 31px;
+  font-family: Tahoma;
+  font-size: 12px;
+  width: 100%;
+  max-width: 258px;
+
+  @media (min-width: 611px) {
+    max-width: 640px;
+  }
+
+  @media (min-width: 872px) {
+    max-width: 810px;
+  }
+}

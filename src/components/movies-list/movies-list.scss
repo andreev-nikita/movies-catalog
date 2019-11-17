@@ -1,0 +1,17 @@
+.movies-catalog {
+  .movies-list {
+    display: grid;
+    justify-items: center;
+    grid-gap: 22px 18px;
+    justify-content: space-between;
+    grid-template-columns: 1fr;
+
+    @media (min-width: 611px) {
+      grid-template-columns: repeat(2, 258px);
+    }
+
+    @media (min-width: 872px) {
+      grid-template-columns: repeat(3, 258px);
+    }
+  }
+}

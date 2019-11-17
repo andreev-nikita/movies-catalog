@@ -1,0 +1,49 @@
+.movies-catalog {
+  .movie {
+    position: relative;
+    width: 258px;
+    height: 144px;
+    box-shadow: 0px 1px 8px rgba(78, 116, 152, 0.2);
+    border-radius: 8px;
+
+    &__content {
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: flex-start;
+      align-items: center;
+      top: 0;
+      left: 0;
+      height: 100%;
+      border-radius: 4px 4px 0px 0px;
+      overflow: hidden;
+    }
+
+    &__image {
+      height: 85px;
+      border-radius: 4px 4px 0px 0px;
+    }
+
+    &__text {
+      height: 60px;
+      width: 100%;
+      background-color: #fff;
+    }
+
+    &__title {
+      color: #108ce5;
+      margin: 12px 0 0 11px;
+      font-size: 15px;
+      line-height: 20px;
+      font-weight: normal;
+    }
+
+    &__director {
+      color: #536069;
+      margin: 0;
+      margin-left: 11px;
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: normal;
+    }
+  }
+}
