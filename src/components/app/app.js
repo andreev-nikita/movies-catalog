@@ -4,14 +4,16 @@ import Search from '../search/search';
 import MoviesList from '../movies-list/movies-list';
 import Loader from '../loader/loader';
 import Button from '../button/button';
+import Error from '../error/error';
 
 import './app.scss';
 
 export default class App extends React.Component {
   state = {
     movies: [],
-    isLoading: true,
+    loader: true,
     buttonIsActive: false,
+    error: false,
   };
 
   dataController = new DataController({
@@ -23,61 +25,79 @@ export default class App extends React.Component {
     this.dataController
       .getMovies()
       .then(({ movies }) => {
-        this.setState({ movies, isLoading: false, buttonIsActive: true });
+        this.setState({ movies, loader: false, buttonIsActive: true });
       })
       .catch(() => {
-        // this.setState({ isLoading: false });
+        this.setState({ error: true });
       });
   }
 
   onSearchChange = value => {
-    this.setState({ movies: [], isLoading: true, buttonIsActive: false });
+    this.setState({ movies: [], loader: true, buttonIsActive: false });
 
     this.dataController
       .searchMovies(value, Symbol(value))
-      .then(({ movies = null, search: buttonIsActive } = {}) => {
-        if (Array.isArray(movies)) {
+      .then(obj => {
+        if (obj) {
+          const { movies, search: buttonIsActive } = obj;
+
           this.setState({
             movies,
-            isLoading: false,
+            loader: false,
             buttonIsActive: !buttonIsActive,
           });
         }
       })
       .catch(() => {
-        // this.setState({ isLoading: false });
+        this.setState({ error: true });
       });
   };
 
   showMoreMovies = () => {
-    this.setState({ isLoading: true, buttonIsActive: false });
+    this.setState({ loader: true, buttonIsActive: false });
 
     this.dataController
       .getMovies()
       .then(({ movies, search: buttonIsActive }) => {
         this.setState({
           movies,
-          isLoading: false,
+          loader: false,
           buttonIsActive: !buttonIsActive,
         });
       })
       .catch(() => {
-        this.setState({ isLoading: false });
+        this.setState({ loader: false, error: true });
       });
   };
 
   render() {
-    const { movies, isLoading, buttonIsActive } = this.state;
+    const { movies, loader, buttonIsActive, error } = this.state;
+
+    const notFoundElement =
+      movies.length === 0 && !loader && !error ? (
+        <Error text="К сожалению, по вашему запросу ничего не найдено =(" />
+      ) : null;
+
+    const moviesList =
+      movies.length !== 0 && !error ? <MoviesList moviesData={movies} /> : null;
+
+    const errorElement = error ? <Error text="Произошла ошибка =(" /> : null;
 
     return (
       <div className="movies-catalog">
         <h1>Каталог фильмов</h1>
         <Search onSearchChange={this.onSearchChange} />
-        {movies.length !== 0 ? <MoviesList moviesData={movies} /> : null}
-        {isLoading ? <Loader /> : null}
+        {notFoundElement}
+        {moviesList}
+        {loader && !error ? <Loader /> : null}
+        {errorElement}
         <Button
           onClickAction={this.showMoreMovies}
-          active={buttonIsActive && this.dataController.max !== movies.length}
+          active={
+            buttonIsActive &&
+            !error &&
+            this.dataController.max !== movies.length
+          }
         />
       </div>
     );

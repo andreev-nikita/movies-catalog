@@ -1,9 +1,9 @@
 export default class BaseService {
-  constructor({ host }) {
+  constructor(host) {
     this.host = host;
   }
 
-  async getResource(url) {
+  async _getResource(url) {
     const fullUrl = `${this.host}${url}`;
     const response = await fetch(fullUrl);
 
