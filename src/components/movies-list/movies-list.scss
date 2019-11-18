@@ -5,6 +5,7 @@
     grid-gap: 22px 18px;
     justify-content: space-between;
     grid-template-columns: 1fr;
+    margin-top: 22px;
 
     @media (min-width: 611px) {
       grid-template-columns: repeat(2, 258px);

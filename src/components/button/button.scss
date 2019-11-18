@@ -1,0 +1,29 @@
+.movies-catalog {
+  .show-more-button {
+    padding: 0;
+    border: none;
+    color: #fff;
+    background-color: #108ce5;
+    cursor: pointer;
+    width: 190px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 18px;
+    text-align: center;
+    border-radius: 4px;
+    margin-top: 31px;
+    margin-bottom: 31px;
+    outline: none;
+    -webkit-touch-callout: none; 
+    -webkit-user-select: none; 
+    -khtml-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none;
+
+    &_disabled {
+      pointer-events: none;
+      background-color: rgb(118, 180, 238);
+    }
+  }
+}

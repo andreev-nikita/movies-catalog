@@ -3,7 +3,9 @@
   font-family: Tahoma;
   font-size: 12px;
   width: 100%;
+  min-width: 258px;
   max-width: 258px;
+  text-align: center;
 
   @media (min-width: 611px) {
     max-width: 640px;

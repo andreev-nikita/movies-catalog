@@ -49,9 +49,12 @@ export default class App extends React.Component {
       <div className="movies-catalog">
         <h1>Каталог фильмов</h1>
         <Search />
-        <MoviesList moviesData={movies} />
+        {movies.length !== 0 ? <MoviesList moviesData={movies} /> : null}
         {isLoading ? <Loader /> : null}
-        <Button onClickAction={this.showMoreMovies} />
+        <Button
+          onClickAction={this.showMoreMovies}
+          active={!isLoading && this.dataController.max !== movies.length}
+        />
       </div>
     );
   }

@@ -18,6 +18,10 @@ export default class DataController {
     this.isLoading = false;
   }
 
+  get max() {
+    return this.maxCount;
+  }
+
   async getMovies() {
     if (!this.isLoading) {
       this.isLoading = true;
