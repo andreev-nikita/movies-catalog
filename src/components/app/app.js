@@ -3,32 +3,44 @@ import DataController from '../../services/data-controller';
 import Search from '../search/search';
 import MoviesList from '../movies-list/movies-list';
 import Loader from '../loader/loader';
+import Button from '../button/button';
 
 import './app.scss';
 
 export default class App extends React.Component {
-  defaultMoviesCount = 3;
-
   state = {
     movies: [],
     isLoading: true,
   };
 
-  dataController = new DataController();
+  dataController = new DataController({
+    defaultCount: 3,
+    increaseCount: 3,
+  });
 
   componentDidMount() {
-    this.dataController.getMovies(this.defaultMoviesCount).then(movies => {
-      this.setState({ movies, isLoading: false });
-    });
+    this.dataController
+      .getMovies()
+      .then(movies => {
+        this.setState({ movies, isLoading: false });
+      })
+      .catch(() => {
+        this.setState({ isLoading: false });
+      });
   }
 
-  setNewMoviesCount(count) {
-    this.dataController.getMovies(count).then(movies => {
-      this.setState({ movies, isLoading: false });
-    });
-
+  showMoreMovies = () => {
     this.setState({ isLoading: true });
-  }
+
+    this.dataController
+      .getMovies()
+      .then(movies => {
+        this.setState({ movies, isLoading: false });
+      })
+      .catch(() => {
+        this.setState({ isLoading: false });
+      });
+  };
 
   render() {
     const { movies, isLoading } = this.state;
@@ -39,6 +51,7 @@ export default class App extends React.Component {
         <Search />
         <MoviesList moviesData={movies} />
         {isLoading ? <Loader /> : null}
+        <Button onClickAction={this.showMoreMovies} />
       </div>
     );
   }

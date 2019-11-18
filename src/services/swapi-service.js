@@ -7,18 +7,15 @@ export default class SwapiService extends BaseService {
     });
   }
 
-  async getAllMovies() {
-    const result = await this.getResource('films/');
+  async getMovie(id) {
+    const result = await this.getResource(`films/${id}`);
+    await new Promise(res => setTimeout(res, 2000));
 
-    return result.results.map(film => {
-      const id = film.url.match(/\/(\d+)/)[1];
-
-      return {
-        id,
-        imageUrl: null,
-        title: film.title,
-        director: film.director,
-      };
-    });
+    return {
+      id,
+      imageUrl: null,
+      title: result.title,
+      director: result.director,
+    };
   }
 }

@@ -1,44 +1,69 @@
 import SwapiService from './swapi-service';
 import PixabayService from './pixabay-service';
+import placeholder from '../components/movie/placeholder.png';
 
 export default class DataController {
-  swapiService = new SwapiService();
+  constructor(obj) {
+    ({
+      defaultCount: this.defaultCount,
+      increaseCount: this.increaseCount,
+    } = obj);
 
-  pixabayService = new PixabayService();
+    this.currentCount = 0;
+    this.maxCount = 7;
 
-  movies = null;
-
-  async getMovies(count) {
-    if (!this.movies) {
-      this.movies = await this.swapiService.getAllMovies();
-    }
-
-    const askedMovies = this.movies.slice(0, count);
-
-    const promises = askedMovies.map((movie, i) => this.addImageUrl(i));
-
-    const newMovies = await Promise.all(promises);
-
-    this.movies = [...newMovies, ...this.movies.slice(count)];
-
-    return this.movies.slice(0, count);
+    this.swapiService = new SwapiService();
+    this.pixabayService = new PixabayService();
+    this.movies = {};
+    this.isLoading = false;
   }
 
-  async addImageUrl(id) {
-    const sourceMovie = this.movies[id];
+  async getMovies() {
+    if (!this.isLoading) {
+      this.isLoading = true;
+      const { currentCount, defaultCount, increaseCount, movies } = this;
 
-    if (!sourceMovie.imageUrl) {
-      let url;
+      let newCount =
+        currentCount === 0 ? defaultCount : currentCount + increaseCount;
 
-      try {
-        url = await this.pixabayService.getImage(sourceMovie.title);
-      } catch {
-        url = 'default';
+      if (newCount > this.maxCount) {
+        newCount = this.maxCount;
       }
 
-      return { ...sourceMovie, imageUrl: url };
+      const requests = [];
+      for (let i = 1; i <= newCount; i += 1) {
+        if (!movies[i]) {
+          movies[i] = {
+            id: i,
+            loaded: false,
+          };
+
+          requests.push(
+            (async () => {
+              const result = await this.swapiService.getMovie(i);
+
+              movies[i].loaded = true;
+              movies[i].title = result.title;
+              movies[i].director = result.director;
+
+              try {
+                const url = await this.pixabayService.getImage(movies[i].title);
+                movies[i].imageUrl = url;
+              } catch (err) {
+                movies[i].imageUrl = placeholder;
+              }
+            })()
+          );
+        }
+      }
+
+      await Promise.all(requests);
+      this.isLoading = false;
+      this.currentCount = newCount;
     }
 
-    return sourceMovie;
+    return Object.entries(this.movies)
+      .filter(([id]) => +id <= this.currentCount)
+      .map(([, movie]) => movie);
   }
 }
