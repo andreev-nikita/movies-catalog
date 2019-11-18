@@ -5,6 +5,7 @@
     height: 144px;
     box-shadow: 0px 1px 8px rgba(78, 116, 152, 0.2);
     border-radius: 8px;
+    transition: opacity 0.3s ease;
 
     &__content {
       display: flex;
