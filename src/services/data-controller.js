@@ -2,6 +2,12 @@ import SwapiService from './swapi-service';
 import PixabayService from './pixabay-service';
 import placeholder from '../components/movie/placeholder.png';
 
+/* 
+  Компонент управляет загрузкой данных через SwapiService и PixabayService 
+  Хранит внутри себя объект this.movies, в котором хранятся доступные приложению 
+  данные на текущий момент. Когда приложение запрашивает данные, сначала они ищутся 
+  в this.movies, и только потом делаются запросы на сервер, если данные не были найдены.
+*/
 export default class DataController {
   constructor(obj) {
     ({
@@ -18,6 +24,13 @@ export default class DataController {
     this.isLoading = false;
   }
 
+  /* 
+    Метод реализует логику поискового запроса к серверу.
+    id хранится в инстансе класса, и нужен для того, чтобы
+    данный компонент мог отследить какой запрос был последним,
+    и вернул данные только по этому запросу. По всем предыдущим
+    будет возвращен null
+  */
   async searchMovies(text, id) {
     this.lastSearchId = id;
 
@@ -38,6 +51,7 @@ export default class DataController {
     return null;
   }
 
+  // Возвращает объект с данными о фильмах
   async getMovies(changeCount = true) {
     if (!this.isLoading) {
       this.isLoading = true;

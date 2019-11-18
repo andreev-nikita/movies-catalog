@@ -66,39 +66,38 @@ export default class App extends React.Component {
         });
       })
       .catch(() => {
-        this.setState({ loader: false, error: true });
+        this.setState({ error: true });
       });
   };
 
   render() {
     const { movies, loader, buttonIsActive, error } = this.state;
 
-    const notFoundElement =
-      movies.length === 0 && !loader && !error ? (
-        <Error text="К сожалению, по вашему запросу ничего не найдено =(" />
-      ) : null;
+    const notFoundCondition = movies.length === 0 && !loader && !error;
+    const notFoundElement = notFoundCondition ? (
+      <Error text="К сожалению, по вашему запросу ничего не найдено =(" />
+    ) : null;
 
-    const moviesList =
-      movies.length !== 0 && !error ? <MoviesList moviesData={movies} /> : null;
+    const moviesListCondition = movies.length !== 0 && !error;
+    const moviesListElement = moviesListCondition ? (
+      <MoviesList moviesData={movies} />
+    ) : null;
 
     const errorElement = error ? <Error text="Произошла ошибка =(" /> : null;
+    const loaderElement = loader && !error ? <Loader /> : null;
+
+    const buttonActivity =
+      buttonIsActive && !error && this.dataController.max !== movies.length;
 
     return (
       <div className="movies-catalog">
         <h1>Каталог фильмов</h1>
         <Search onSearchChange={this.onSearchChange} />
         {notFoundElement}
-        {moviesList}
-        {loader && !error ? <Loader /> : null}
+        {moviesListElement}
+        {loaderElement}
         {errorElement}
-        <Button
-          onClickAction={this.showMoreMovies}
-          active={
-            buttonIsActive &&
-            !error &&
-            this.dataController.max !== movies.length
-          }
-        />
+        <Button onClickAction={this.showMoreMovies} active={buttonActivity} />
       </div>
     );
   }
