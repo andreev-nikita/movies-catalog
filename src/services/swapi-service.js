@@ -8,14 +8,20 @@ export default class SwapiService extends BaseService {
   }
 
   async getMovie(id) {
-    const result = await this.getResource(`films/${id}`);
-    await new Promise(res => setTimeout(res, 2000));
+    const response = await this.getResource(`films/${id}`);
 
     return {
       id,
       imageUrl: null,
-      title: result.title,
-      director: result.director,
+      title: response.title,
+      director: response.director,
     };
+  }
+
+  async searchMovies(text) {
+    const response = await this.getResource(`films/?search=${text}`);
+    const idRegExp = /\/(\d+)\//;
+
+    return response.results.map(data => +data.url.match(idRegExp)[1]);
   }
 }

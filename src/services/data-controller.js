@@ -18,56 +18,99 @@ export default class DataController {
     this.isLoading = false;
   }
 
-  get max() {
-    return this.maxCount;
+  async searchMovies(text, id) {
+    this.lastSearchId = id;
+
+    if (text === '') {
+      return this.getMovies(false);
+    }
+
+    const moviesIdArr = await this.swapiService.searchMovies(text);
+    await this._updateMoviesData(moviesIdArr);
+
+    if (id === this.lastSearchId) {
+      return {
+        movies: moviesIdArr.map(i => this.movies[i]),
+        search: true,
+      };
+    }
+
+    return null;
   }
 
-  async getMovies() {
+  async getMovies(changeCount = true) {
     if (!this.isLoading) {
       this.isLoading = true;
-      const { currentCount, defaultCount, increaseCount, movies } = this;
+      const { currentCount, defaultCount, increaseCount } = this;
 
-      let newCount =
-        currentCount === 0 ? defaultCount : currentCount + increaseCount;
+      let newCount;
+      if (changeCount) {
+        newCount =
+          currentCount === 0 ? defaultCount : currentCount + increaseCount;
+      } else {
+        newCount = currentCount;
+      }
 
       if (newCount > this.maxCount) {
         newCount = this.maxCount;
       }
 
-      const requests = [];
+      const idArr = [];
       for (let i = 1; i <= newCount; i += 1) {
-        if (!movies[i]) {
-          movies[i] = {
-            id: i,
-            loaded: false,
-          };
-
-          requests.push(
-            (async () => {
-              const result = await this.swapiService.getMovie(i);
-
-              movies[i].loaded = true;
-              movies[i].title = result.title;
-              movies[i].director = result.director;
-
-              try {
-                const url = await this.pixabayService.getImage(movies[i].title);
-                movies[i].imageUrl = url;
-              } catch (err) {
-                movies[i].imageUrl = placeholder;
-              }
-            })()
-          );
-        }
+        idArr.push(i);
       }
 
-      await Promise.all(requests);
+      await this._updateMoviesData(idArr);
+
       this.isLoading = false;
       this.currentCount = newCount;
     }
 
-    return Object.entries(this.movies)
-      .filter(([id]) => +id <= this.currentCount)
-      .map(([, movie]) => movie);
+    return {
+      movies: Object.entries(this.movies)
+        .filter(([id]) => +id <= this.currentCount)
+        .map(([, movie]) => movie),
+      search: false,
+    };
+  }
+
+  async _updateMoviesData(idArr) {
+    const { movies } = this;
+    const requests = [];
+
+    idArr.forEach(id => {
+      if (!movies[id]) {
+        movies[id] = {
+          id,
+          loaded: false,
+        };
+
+        movies[id].promise = (async () => {
+          const result = await this.swapiService.getMovie(id);
+
+          movies[id].title = result.title;
+          movies[id].director = result.director;
+
+          try {
+            const url = await this.pixabayService.getImage(movies[id].title);
+            movies[id].imageUrl = url;
+          } catch (err) {
+            movies[id].imageUrl = placeholder;
+          }
+
+          movies[id].loaded = true;
+        })();
+
+        requests.push(movies[id].promise);
+      } else if (!movies[id].loaded) {
+        requests.push(movies[id].promise);
+      }
+    });
+
+    await Promise.all(requests);
+  }
+
+  get max() {
+    return this.maxCount;
   }
 }
